@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/stm-schema.json",
+  "title": "System Topology Manifest",
+  "description": "Defines the structure of a System Topology Manifest (STM).",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Unique name of the service or application."
+    },
+    "description": {
+      "type": "string",
+      "description": "Short summary of the service's purpose."
+    },
+    "appType": {
+      "type": "string",
+      "description": "Role in the ecosystem (worker, frontend, utility, etc.)."
+    },
+    "technologyStack": {
+      "type": "string",
+      "description": "Primary language or framework."
+    },
+    "trigger": {
+      "type": "object",
+      "description": "Systems or events that activate this node.",
+      "additionalProperties": { "type": "string" }
+    },
+    "input": {
+      "type": "object",
+      "description": "Upstream systems and data types consumed.",
+      "additionalProperties": { "type": "string" }
+    },
+    "output": {
+      "type": "object",
+      "description": "Downstream systems and data types produced.",
+      "additionalProperties": { "type": "string" }
+    },
+    "maintainer": {
+      "type": "string",
+      "description": "Team or contact responsible for the service."
+    },
+    "version": {
+      "type": "string",
+      "description": "Optional semantic version of the manifest."
+    }
+  },
+  "required": ["name", "description", "appType", "technologyStack"],
+  "additionalProperties": false
+}
