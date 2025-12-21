@@ -1,50 +1,176 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.com/stm-schema.json",
-  "title": "System Topology Manifest",
-  "description": "Defines the structure of a System Topology Manifest (STM).",
-  "type": "object",
-  "properties": {
-    "name": {
-      "type": "string",
-      "description": "Unique name of the service or application."
-    },
-    "description": {
-      "type": "string",
-      "description": "Short summary of the service's purpose."
-    },
-    "appType": {
-      "type": "string",
-      "description": "Role in the ecosystem (worker, frontend, utility, etc.)."
-    },
-    "technologyStack": {
-      "type": "string",
-      "description": "Primary language or framework."
-    },
-    "trigger": {
+  "$id": "https://github.com/SystemTopologyManifest/system-topology-manifest/blob/main/stm-schema.json",
+  "title": "System Topology Manifest (STM) Schema",
+  "description": "Validates either a canonical STM manifest file (stm.manifest.json) or a package.json-embedded stm fragment.",
+  "$defs": {
+    "canonicalApp": {
       "type": "object",
-      "description": "Systems or events that activate this node.",
-      "additionalProperties": { "type": "string" }
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Optional stable identifier (recommended: app:<kebab-case>)."
+        },
+        "name": {
+          "type": "string",
+          "description": "Unique name of the service or application."
+        },
+        "description": {
+          "type": "string",
+          "description": "Short summary of the system's purpose."
+        },
+        "appType": {
+          "type": "string",
+          "description": "Role in the ecosystem (worker, api, router, frontend, etl, module, bot, etc.)."
+        },
+        "technologyStack": {
+          "type": "string",
+          "description": "Primary runtime/framework (e.g., Node.js, Node.js + Express, Node-RED + Node.js)."
+        },
+        "trigger": {
+          "type": "object",
+          "description": "What starts this system (scheduler, webhook, user action, etc.).",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "input": {
+          "type": "object",
+          "description": "What this system reads from and the data shape.",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "output": {
+          "type": "object",
+          "description": "What this system writes to and the resulting artifact/data.",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "description",
+        "appType",
+        "technologyStack",
+        "trigger",
+        "input",
+        "output"
+      ]
     },
-    "input": {
+    "fragmentApp": {
       "type": "object",
-      "description": "Upstream systems and data types consumed.",
-      "additionalProperties": { "type": "string" }
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Stable identifier (recommended: app:<kebab-case>)."
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable name."
+        },
+        "description": {
+          "type": "string",
+          "description": "What this system does."
+        },
+        "appType": {
+          "type": "string",
+          "description": "Role in the ecosystem (worker, api, router, frontend, etl, module, bot, etc.)."
+        },
+        "technologyStack": {
+          "type": "string",
+          "description": "Primary runtime/framework (optional in fragments)."
+        },
+        "triggers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Trigger statements (short strings)."
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Input statements (short strings)."
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Output statements (short strings)."
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Optional certainty score for prioritizing review."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "appType",
+        "triggers",
+        "inputs",
+        "outputs"
+      ]
     },
-    "output": {
+    "canonicalManifest": {
       "type": "object",
-      "description": "Downstream systems and data types produced.",
-      "additionalProperties": { "type": "string" }
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "description": "STM manifest schema version."
+        },
+        "generated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 generation timestamp."
+        },
+        "apps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/canonicalApp"
+          },
+          "description": "Canonical app definitions."
+        }
+      },
+      "required": [
+        "schema_version",
+        "generated",
+        "apps"
+      ]
     },
-    "maintainer": {
-      "type": "string",
-      "description": "Team or contact responsible for the service."
-    },
-    "version": {
-      "type": "string",
-      "description": "Optional semantic version of the manifest."
+    "packageJsonFragment": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/fragmentApp"
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/fragmentApp"
+          }
+        }
+      ]
     }
   },
-  "required": ["name", "description", "appType", "technologyStack"],
-  "additionalProperties": false
+  "oneOf": [
+    {
+      "$ref": "#/$defs/canonicalManifest"
+    },
+    {
+      "$ref": "#/$defs/packageJsonFragment"
+    }
+  ]
 }

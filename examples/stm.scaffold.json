@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "generated": "<ISO-8601 timestamp>",
+  "apps": [
+    {
+      "id": "",
+      "name": "",
+      "description": "",
+      "appType": "",
+      "technologyStack": "",
+      "trigger": {},
+      "input": {},
+      "output": {}
+    }
+  ]
+}
