@@ -163,6 +163,14 @@ npx ajv validate -s stm-schema.json -d /tmp/stm.fragment.json
 `ontology`, `data-topology`, `open-standard`, `semantic-schema`, `machine-readable`,  
 `ai-scaffolding`, `cognitive-scaffolding`, `infrastructure-graph`, `system-topology`
 
+## Runtime Layer
+
+This system uses **MOCA (Memory-Oriented Cognitive Architecture)** as a runtime and integration layer.
+
+MOCA is independently usable and is not specific to this project.
+
+https://github.com/MemoryOrientedCognitiveArchitecture/memory-oriented-cognitive-architecture
+
 ### Contributing
 
 We welcome contributions to expand and improve the System Architecture Manifest project. If you’re interested, please check out the **[contributing guidelines](./CONTRIBUTING.md)** for more information.
